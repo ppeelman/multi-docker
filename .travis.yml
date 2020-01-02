@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -f ./client/Dockerfile.dev -t ppeelman/react-test ./client
+
+script:
+  -  docker run -e CI=true ppeelman/react-test npm test
+
+after_success:
+  - docker build -t ppeelman/multi-client ./client
+  - docker build -t ppeelman/multi-nginx ./nginx
+  - docker build -t ppeelman/multi-server ./server
+  - docker build -t ppeelman/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u  "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push ppeelman/multi-client
+  - docker push ppeelman/multi-nginx
+  - docker push ppeelman/multi-server
+  - docker push ppeelman/multi-worker
