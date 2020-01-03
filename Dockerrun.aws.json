@@ -24,7 +24,7 @@
     },
     {
       "name": "nginx",
-      "image": "peelman/multi-nginx",
+      "image": "ppeelman/multi-nginx",
       "hostname": "nginx",
       "essential": true,
       "memory": 128,
